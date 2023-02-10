@@ -1,13 +1,13 @@
 import { Request, Response } from 'express'
-import { CreateUserService } from '../services/CreateUserService'
+import { UserService } from '../services/UserService'
 
-class CreateUserController {
-    async handle (req:Request, res:Response) {
+class UserController {
+    async create (req:Request, res:Response) {
         const { username, password } = req.body
 
-        const createUserService = new CreateUserService()
+        const createUserService = new UserService()
 
-        const createdUser = await createUserService.execute( username, password )
+        const createdUser = await createUserService.create( username, password )
 
         return res.status(201).json({
             status: 'Success',
@@ -17,4 +17,4 @@ class CreateUserController {
     }
 }
 
-export default new CreateUserController()
+export default new UserController()
