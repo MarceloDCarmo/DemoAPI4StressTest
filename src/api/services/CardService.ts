@@ -49,7 +49,7 @@ export class CardService {
 
         const userExists = await UserRepository.findFirst({ where: { id: userId } })
 
-        if(!userExists){
+        if (!userExists) {
             throw new ValidationError("User not found", 404)
         }
 
@@ -68,13 +68,30 @@ export class CardService {
         return card
     }
 
-    async setActiveStatus(cardId: string, isActive: boolean) {
-        if (!cardId || !isActive) {
-            throw new ValidationError("The new status must not be null", 400)
+    async setActiveStatus(cardId: string, status: boolean) {
+        if (!cardId || status == null) {
+            throw new ValidationError("Card id and new status must not be null", 400)
         }
 
+        let card = await CardRepository.findFirst({ where: { id: cardId } })
 
+        if (!card) {
+            throw new ValidationError("Card not found", 404)
+        }
 
+        if (card.active == status) {
+            throw new ValidationError(`Card is already ${card.active ? 'active' : 'inactive'}`, 400)
+        }
+
+        card = await CardRepository.update(
+            {
+                where: {
+                    id: cardId
+                },
+                data: {
+                    active: status
+                }
+            })
     }
 
     private generateCardNumber(): string {

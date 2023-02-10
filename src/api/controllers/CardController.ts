@@ -21,6 +21,18 @@ class CardController {
 
         return res.status(200).json(card)
     }
+
+    async setActiveStatus (req: Request, res: Response){
+        const { cardId, status } = req.body
+
+        const service = new CardService()
+
+        const card = await service.setActiveStatus(cardId, status)
+
+        return res.status(200).json({
+            message: `Card ${status ? 'activated' : 'deactivated'}`
+        })
+    }
 }
 
 export default new CardController()
