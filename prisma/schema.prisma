@@ -11,23 +11,25 @@ datasource db {
 }
 
 model User {
-  id         String       @id @default(uuid())
-  username   String       @unique
+  id         String   @id @default(uuid())
+  username   String   @unique
   password   String
-  created_at DateTime     @default(now())
-  CreditCard CreditCard[]
+  created_at DateTime @default(now())
+  CreditCard Card[]
 
   @@map("users")
 }
 
-model CreditCard {
+model Card {
   id         String   @id @default(uuid())
   userId     String
   cardNumber String
+  type       String
   expireAt   DateTime
   createdAt  DateTime @default(now())
+  active     Boolean
 
   user User @relation(fields: [userId], references: [id])
 
-  @@map("credit_cards")
+  @@map("cards")
 }

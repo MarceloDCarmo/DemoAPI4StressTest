@@ -2,7 +2,7 @@ import { hash } from 'bcryptjs'
 import process from 'process'
 import { ValidationError } from '../errors/ValidationError'
 import { UserRepository } from '../repositories/UserRepository'
-import { CreditCardService } from './CreditCardService'
+import { CardService } from './CardService'
 
 export class UserService {
 
@@ -26,8 +26,8 @@ export class UserService {
             }
         })
 
-        const creditCardService = new CreditCardService()
-        creditCardService.create(user)
+        const creditCardService = new CardService()
+        creditCardService.createCardList(user)
 
         return user
     }

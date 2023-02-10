@@ -27,8 +27,9 @@ export class AuthenticateService {
 
         return {
             token,
-            expires_in: dayjs().add(1, 'hour'),
-            
+            userId:user.id,
+            validUntil: dayjs().add(1, 'hour'),
+            expiresIn: 3600
         }
     }
 }
