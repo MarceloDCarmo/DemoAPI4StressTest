@@ -4,6 +4,8 @@ WORKDIR /usr/DemoAleloAPI
 
 COPY . .
 
+COPY ./.env .
+
 RUN npm install
 
 RUN npm run build
