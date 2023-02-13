@@ -63,14 +63,18 @@ export class CardService {
             throw new ValidationError("Card Id must not be null", 400)
         }
 
-        const card = CardRepository.findFirst({ where: { id: cardId } })
+        const card = await CardRepository.findFirst({ where: { id: cardId } })
+
+        if(!card) {
+            throw new ValidationError("Card not found", 404);
+        }
 
         return card
     }
 
     async setActiveStatus(cardId: string, status: boolean) {
         if (!cardId || status == null) {
-            throw new ValidationError("Card id and new status must not be null", 400)
+            throw new ValidationError("Card id and new status must not be null", 422)
         }
 
         let card = await CardRepository.findFirst({ where: { id: cardId } })

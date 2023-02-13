@@ -4,11 +4,15 @@ import "express-async-errors"
 import { ValidationError } from './errors/ValidationError'
 import router from './routes'
 
+import swaggerUi from 'swagger-ui-express'
+import swaggerDocument from '../../swagger.json'
+
 const app = express()
 
 dotenv.config()
-
 const port = process.env.PORT
+
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 app.use(express.json())
 

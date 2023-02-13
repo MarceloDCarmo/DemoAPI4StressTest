@@ -1,0 +1,323 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Alelo Demonstration API",
+        "description": "An API to be used at demonstrations, especially build to test with JMeter.",
+        "contact": {
+            "name": "Developer",
+            "email": "mcarmo.yaman@alelo.com.br"
+        },
+        "version": "1.0.0",
+        "license": {
+            "name": "Apache 2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+        }
+    },
+    "paths": {
+        "/v1/auth": {
+            "post": {
+                "summary": "Authentication",
+                "description": "Authentication endpoint. Provides an access token",
+                "tags": [
+                    "Authentication"
+                ],
+                "requestBody": {
+                    "description": "User's username and password",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserInfo"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User authenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AuthResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Wrong username or password"
+                    },
+                    "422": {
+                        "description": "Invalid username or password"
+                    }
+                }
+            }
+        },
+        "/v1/users/{userId}/cards": {
+            "get": {
+                "summary": "Finds all user's cards",
+                "description": "Finds all cards related to the userId provided",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "Cards"
+                ],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "required": true,
+                        "description": "User's id to find cards",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User's cards",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "itens": {
+                                        "$ref": "#/components/schemas/AuthResponse"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "User must not be null"
+                    },
+                    "401": {
+                        "description": "Invalid, expired or not provided token"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
+        "/v1/cards": {
+            "post": {
+                "summary": "Set card active status",
+                "description": "Turn the provided card active or inactive",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "Cards"
+                ],
+                "requestBody": {
+                    "description": "Card id and status to be set",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CardStatus"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success on activate or deactivate card"
+                    },
+                    "400": {
+                        "description": "Card is already active or inactive"
+                    },
+                    "401": {
+                        "description": "Invalid, expired or not provided token"
+                    },
+                    "404": {
+                        "description": "Card not found"
+                    },
+                    "422": {
+                        "description": "Card id and new status must not be null"
+                    }
+                }
+            }
+        },
+        "v1/cards/{cardId}": {
+            "get": {
+                "summary": "Find card by id",
+                "description": "Finds a card",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "Cards"
+                ],
+                "parameters": [
+                    {
+                        "name": "cardId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Id of the card to be found",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Card info",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CardResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Card Id must not be null"
+                },
+                "401": {
+                    "description": "Invalid, expired or not provided token"
+                },
+                "404": {
+                    "description": "Card not found"
+                }
+            }
+        },
+        "/v1/users": {
+            "post": {
+                "summary": "Create user",
+                "description": "Create an user",
+                "tags": [
+                    "Users"
+                ],
+                "requestBody": {
+                    "description": "Username and password",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserInfo"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User created"
+                    },
+                    "400": {
+                        "description": "Username already in use"
+                    },
+                    "401": {
+                        "description": "Invalid, expired or not provided token"
+                    },
+                    "422": {
+                        "description": "Invalid username or password"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "UserInfo": {
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "description": "User`s name"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "User`s password"
+                    }
+                }
+            },
+            "AuthResponse": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "description": "Access token for authentication"
+                    },
+                    "userId": {
+                        "type": "string",
+                        "description": "The id related to the user that authenticated",
+                        "format": "uuid"
+                    },
+                    "validUntil": {
+                        "type": "string",
+                        "description": "Informs until when the token is valid",
+                        "format": "date-time"
+                    },
+                    "expiresIn": {
+                        "type": "number",
+                        "description": "Informs how much seconds until the token expiration"
+                    }
+                }
+            },
+            "CardResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Card id",
+                        "format": "uuid"
+                    },
+                    "userId": {
+                        "type": "string",
+                        "description": "User id",
+                        "format": "uuid"
+                    },
+                    "cardNumber": {
+                        "type": "string",
+                        "description": "Card number"
+                    },
+                    "type": {
+                        "type": "string",
+                        "description": "Card type"
+                    },
+                    "expireAt": {
+                        "type": "string",
+                        "description": "Card expiration date"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "description": "Card produced date"
+                    },
+                    "active": {
+                        "type": "boolean",
+                        "description": "Card active status"
+                    }
+                }
+            },
+            "CardStatus": {
+                "type": "object",
+                "properties": {
+                    "cardId": {
+                        "type": "string",
+                        "description": "Card id",
+                        "format": "uuid"
+                    },
+                    "status": {
+                        "type": "boolean",
+                        "description": "True to activate and false to deactivate"
+                    }
+                }
+            } 
+        },
+        "securitySchemes": {
+              "bearerAuth": {
+                "description": "JWT authentication",
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+              }  
+        }
+    }
+}
