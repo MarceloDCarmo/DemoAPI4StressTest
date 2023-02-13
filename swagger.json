@@ -82,8 +82,8 @@
                             "application/json": {
                                 "schema": {
                                     "type": "array",
-                                    "itens": {
-                                        "$ref": "#/components/schemas/AuthResponse"
+                                    "items": {
+                                        "$ref": "#/components/schemas/CardResponse"
                                     }
                                 }
                             }
