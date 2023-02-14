@@ -102,7 +102,7 @@
             }
         },
         "/v1/cards": {
-            "post": {
+            "put": {
                 "summary": "Set card active status",
                 "description": "Turn the provided card active or inactive",
                 "security": [
